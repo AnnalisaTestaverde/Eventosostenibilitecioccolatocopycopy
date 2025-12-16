@@ -10,13 +10,15 @@ interface PersonalizedSensoryJourneyProps {
   experiences: SensoryExperience[];
   onExperienceCollect: (experienceId: string, data?: any) => void;
   onReset: () => void;
+  onReturnToForm: () => void;
 }
 
 export function PersonalizedSensoryJourney({
   personality,
   experiences,
   onExperienceCollect,
-  onReset
+  onReset,
+  onReturnToForm
 }: PersonalizedSensoryJourneyProps) {
   const [showReveal, setShowReveal] = useState(true);
 
@@ -35,6 +37,7 @@ export function PersonalizedSensoryJourney({
           experiences={experiences}
           onExperienceCollect={onExperienceCollect}
           onReset={onReset}
+          onReturnToForm={onReturnToForm}
         />
       )}
     </AnimatePresence>

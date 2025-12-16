@@ -31,16 +31,39 @@ export default function App() {
       setPersonalityType(urlPersonality);
       setHasCompletedForm(true);
     } 
-    // Altrimenti controlla se c'è una personalità salvata
+    // Altrimenti controlla se c'è una personalità salvata E che sia valida
     else if (savedPersonality && personalities[savedPersonality]) {
       setPersonalityType(savedPersonality);
       setHasCompletedForm(true);
     }
-    // Altrimenti mostra il form
+    // Altrimenti mostra il form (default per nuovi utenti)
     else {
       setHasCompletedForm(false);
+      // Pulizia preventiva per evitare stati inconsistenti
+      clearAllNocaData();
     }
   }, []);
+  
+  // Funzione helper per pulire TUTTI i dati NOCA da localStorage
+  const clearAllNocaData = () => {
+    // Rimuovi tutti i dati salvati dell'app
+    localStorage.removeItem('noca_personality');
+    localStorage.removeItem('noca_user_data');
+    
+    // Rimuovi tutte le chiavi di percorso sensoriale per ogni personalità
+    const allPersonalities: PersonalityType[] = [
+      'alchimista-tempo',
+      'custode-verde', 
+      'architetto-futuro',
+      'giardiniere-sensoriale',
+      'navigatore-etico',
+      'cacao-dormiente'
+    ];
+    
+    allPersonalities.forEach(p => {
+      localStorage.removeItem(`noca-sensory-journey-${p}`);
+    });
+  };
   
   const handleFormComplete = (personality: PersonalityType) => {
     setPersonalityType(personality);
@@ -137,6 +160,25 @@ export default function App() {
     localStorage.removeItem(storageKey);
   };
 
+  const handleReturnToForm = () => {
+    // Reset completo: pulisci TUTTO e torna al form
+    clearAllNocaData();
+    setHasCompletedForm(false);
+    setPersonalityType('cacao-dormiente');
+    
+    // Reset anche l'URL
+    window.history.pushState({}, '', '/');
+    
+    // Reset le esperienze per sicurezza
+    const resetExperiences = experiences.map(exp => ({ 
+      ...exp, 
+      collected: false, 
+      timestamp: undefined,
+      interactionData: undefined 
+    }));
+    setExperiences(resetExperiences);
+  };
+
   return (
     <div>
       {!hasCompletedForm ? (
@@ -147,6 +189,7 @@ export default function App() {
           experiences={experiences}
           onExperienceCollect={handleExperienceCollect}
           onReset={handleReset}
+          onReturnToForm={handleReturnToForm}
         />
       )}
     </div>

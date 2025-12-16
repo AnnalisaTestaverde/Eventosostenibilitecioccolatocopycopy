@@ -20,6 +20,7 @@ interface SensoryJourneyProps {
   experiences: SensoryExperience[];
   onExperienceCollect: (experienceId: string, data?: any) => void;
   onReset: () => void;
+  onReturnToForm: () => void;
 }
 
 // Decorative elements background
@@ -108,7 +109,7 @@ function DecorativeBackground({ personality }: { personality: Personality }) {
   );
 }
 
-export function SensoryJourney({ personality, experiences, onExperienceCollect, onReset }: SensoryJourneyProps) {
+export function SensoryJourney({ personality, experiences, onExperienceCollect, onReset, onReturnToForm }: SensoryJourneyProps) {
   const [selectedExperience, setSelectedExperience] = useState<SensoryExperience | null>(null);
   const [showExperienceDialog, setShowExperienceDialog] = useState(false);
   const [showMapDialog, setShowMapDialog] = useState(false);
